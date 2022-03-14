@@ -1,9 +1,30 @@
 import pandas as pd
+import argparse
 import random
 import time
 from colorama import Fore, Back, Style
 import os
 import sys
+
+
+voice = {
+    "RU": "milena",
+    "EN": "kate",
+    "DE": "anna",
+    "NL": "claire"
+}
+
+MODE_AUDIT = 1
+MODE_INTERACTIVE = 2
+
+STATUS_OK = 0
+STATUS_EXIT = 1
+
+def parse_arguments(argv):
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-l", "--languages", type=str, required=True, help="Languages, comma seperated, e.g. EN,DE")
+    parser.add_argument("-m", "--mode", type=str, required=True, help="1: audit, 2: interactive")
+    return parser.parse_args(argv)
 
 def word_info(word):
     return Fore.YELLOW + word + Style.RESET_ALL
@@ -21,91 +42,130 @@ def word_diff(word1, word2):
     result += Style.RESET_ALL
     return result
 
-def say(src_word, dst_word):
-    print(f"{Fore.YELLOW}{src_word:50s} {Fore.WHITE}| ", end="")
+def say(word, voice):
+    os.system(f"/usr/bin/say -v {voice} {word}")
+    
+
+def audit_word(df, index, language_list, voice, timeout=2):
+    row = df.loc[index]
+    _word = row[language_list[0]]
+    _voice = voice[language_list[0]]
+    print(f"{Fore.YELLOW}{_word:38s}", end="")
     sys.stdout.flush()
-    os.system(f"/usr/bin/say -v anna {src_word}")
-    time.sleep(2)
-    print(f"{Fore.GREEN}{dst_word:50s}{Style.RESET_ALL}", end="\n")
-    os.system(f"/usr/bin/say -v milena {dst_word}")
+    say(row[language_list[0]], voice[language_list[0]])
+    for i in range(1, len(language_list)):
+        time.sleep(timeout)
+        _word = row[language_list[i]]
+        _voice = voice[language_list[i]]
+        print(f"{Fore.WHITE}| {Fore.GREEN}{_word:38s}", end="")
+        sys.stdout.flush()
+        say(_word, _voice)
+    print(f"{Style.RESET_ALL}\n", end="")
+    sys.stdout.flush()
 
         
-def question(src_word, dst_word):
-    status = False
-    os.system(f"/usr/bin/say -v anna {src_word}")
-    print(f"[ DE ] {src_word}")
+def interact_word(df, index, language_list, voice, timeout=2):
+    row = df.loc[index]
+    _word = row[language_list[0]]
+    _voice = voice[language_list[0]]
+    print(f"[ {language_list[0]} ] {Fore.YELLOW}{_word}{Style.RESET_ALL}")
+    sys.stdout.flush()
+    say(row[language_list[0]], voice[language_list[0]])
+
+    for i in range(1, len(language_list)):
+        _word = row[language_list[i]]
+        _voice = voice[language_list[i]]
+        is_correct = False
+        while not is_correct:
+            df.at[index, f"{language_list[0]}_{language_list[i]}_req_count"] += 1
+            try:
+                answer = input(f"[ {language_list[i]} ] ")
+            except UnicodeDecodeError:
+                print(f"[ EE ] Sorry, the backspace caused an error. Please try again.")
+                answer = ""
+                continue
+            if answer == "quit":
+                return STATUS_EXIT
+            elif answer == "s":
+                print(f"[ >> ] skipped")
+                is_correct = True
+            elif answer == _word:
+                print(f"[ OK ] {word_diff(_word, answer)}")
+                is_correct = True
+            else:
+                print(f"[ XX ] {word_diff(_word, answer)}")
+                df.at[index, f"{language_list[0]}_{language_list[i]}_err_count"] += 1
+                is_correct = False
+            say(_word, _voice)
+    return STATUS_OK
+
+
+def load_df(db_path, language_list, words_path=None, update=False):
+    if update:
+        pass
+    df = pd.read_pickle(db_path)
+    for language in language_list:
+        if language not in df.columns:
+            raise RuntimeError(f"{language} is not present in vocabulary.")
+    # @TODO remove line below, for debugging only.
+    df = df[df["source_1"] == "Rock 'N Learn"]
+    return df
+
+
+def add_count_column(df, column_list):
+    for column in column_list:
+        if column not in df.columns:
+            df[column] = 0
+        df[column].fillna(0, inplace=True)
+
+
+def main(args):
+
+    mode = -1
+    language_list = args.languages.split(",")
+    if len(language_list) < 2:
+        raise RuntimeError(f"Invalid language list.")
     try:
-        answer = input("[ RU ] ")
-    except UnicodeDecodeError:
-        print(f"[ EE ] Sorry, the backspace caused an error. Please try again.")
-        answer = ""
-        status = False
-        return status
-    
-    if answer == "s":
-        print(f"[    ] skipped")
-        return True
-    elif answer == dst_word:
-        print(f"[ √  ] {word_diff(dst_word, answer)}")
-        os.system(f"/usr/bin/say -v milena {dst_word}")
-        return True
-    else:
-        print(f"[ X  ] {word_diff(dst_word, answer)}")
-        os.system(f"/usr/bin/say -v milena {dst_word}")
-        return False
+        mode = int(args.mode)
+    except:
+        raise RuntimeError(f"Mode option is invalid. Expected 1 or 2, actual {args.mode}.")
+    if mode == -1:
+        raise RuntimeError(f"Invalid mode.")
 
-def load_db(db_path):
-    return pd.read_pickle(db_path)
-
-
-def main():
-    UPDATE = False
-    MODE = 1
+    update = False
     db_path = "data/db.pkl"
     words_path = "data/words.csv"
 
-    src_lng = "DE"
-    dst_lng = "RU"
-    request_count = f"{src_lng}_{dst_lng}_request_count"
-    error_count = f"{src_lng}_{dst_lng}_error_count"
+    # Load database
+    df = load_df(db_path, language_list, words_path, update)
 
-    if UPDATE:
-        df = pd.read_csv(words_path)
-        df = df[df["source_1"] == "Rock 'N Learn"]
-        if os.path.exists(db_path):
-            ans = input("Database exists. Do you want to overwrite?")
-            if ans == "y":
-                df.to_pickle(db_path)
-            else:
-                exit(0)
-    else:
-        df = pd.read_pickle(db_path)
-    if request_count not in df.columns:
-        df[request_count] = 0
-        df[error_count] = 0
-        df.to_pickle(db_path)
+
+    # Add score columns if not present yet.
+    req_count_list = [f"{language_list[0]}_{language_list[i]}_req_count" for i in range(1, len(language_list))]
+    err_count_list = [f"{language_list[0]}_{language_list[i]}_err_count" for i in range(1, len(language_list))]
+    add_count_column(df, req_count_list)
+    add_count_column(df, err_count_list)
 
     index_list = df.index.tolist()
     random.shuffle(index_list)
-    if MODE == 0:
+    if mode == MODE_INTERACTIVE:
         for index in index_list:
-            row = df.loc[index]
-            is_correct = False
-            while not is_correct:
-                is_correct = question(row[src_lng], row[dst_lng])
-                df.at[index, request_count] = df.at[index, request_count] + 1
-                if not is_correct:
-                    df.at[index, error_count] = df.at[index, error_count] + 1
+            status = interact_word(df, index, language_list, voice)
             df.to_pickle(db_path)
-    elif MODE == 1:
+            if status == STATUS_EXIT:
+                break
+
+    elif mode == MODE_AUDIT:
         while True:
             index_list = df.index.tolist()
             random.shuffle(index_list)
             for index in index_list:
-                row = df.loc[index]
-                say(row[src_lng], row[dst_lng])
+                audit_word(df, index, language_list, voice)
                 time.sleep(3)
+
+    print("[ .. ] Bye!")
 
 
 if __name__ == "__main__":
-    main()
+    args = parse_arguments(sys.argv[1:])
+    main(args)
