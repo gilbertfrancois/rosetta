@@ -25,6 +25,7 @@ def parse_arguments(argv):
     parser.add_argument("-l", "--languages", type=str, required=True, help="Languages, comma seperated, e.g. EN,DE")
     parser.add_argument("-m", "--mode", type=str, required=True, help="1: audit, 2: interactive")
     parser.add_argument("-u", "--update-wordlist", type=bool, required=False, help="Reads the latest CSV.")
+    parser.add_argument("-r", "--repeat", type=bool, required=False, help="Endless repeat.")
     return parser.parse_args(argv)
 
 def word_info(word):
@@ -131,6 +132,10 @@ def main(args):
 
     mode = -1
     update = False
+    repeat = args.repeat
+    if repeat is None:
+        repeat = False
+    print(f"Repeat: {repeat}.")
 
     language_list = args.languages.split(",")
     if len(language_list) < 2:
@@ -158,22 +163,30 @@ def main(args):
 
     df.to_pickle(db_path)
 
-    index_list = df.index.tolist()
-    random.shuffle(index_list)
     if mode == MODE_INTERACTIVE:
-        for index in index_list:
-            status = interact_word(df, index, language_list, voice)
-            df.to_pickle(db_path)
-            if status == STATUS_EXIT:
-                break
+        running = True
+        while running:
+            index_list = df.index.tolist()
+            random.shuffle(index_list)
+            for index in index_list:
+                status = interact_word(df, index, language_list, voice)
+                df.to_pickle(db_path)
+                if status == STATUS_EXIT:
+                    running = False
+                    break
+            if not repeat:
+                running = False
 
     elif mode == MODE_AUDIT:
-        while True:
+        running = True
+        while running:
             index_list = df.index.tolist()
             random.shuffle(index_list)
             for index in index_list:
                 audit_word(df, index, language_list, voice)
                 time.sleep(3)
+        if not repeat:
+            running = False
 
     print("[ .. ] Bye!")
 
