@@ -24,6 +24,7 @@ def parse_arguments(argv):
     parser = argparse.ArgumentParser()
     parser.add_argument("-l", "--languages", type=str, required=True, help="Languages, comma seperated, e.g. EN,DE")
     parser.add_argument("-m", "--mode", type=str, required=True, help="1: audit, 2: interactive")
+    parser.add_argument("-u", "--update-wordlist", type=bool, required=False, help="Reads the latest CSV.")
     return parser.parse_args(argv)
 
 def word_info(word):
@@ -48,14 +49,14 @@ def say(word, voice):
 
 def audit_word(df, index, language_list, voice, timeout=2):
     row = df.loc[index]
-    _word = row[language_list[0]]
+    _word = str(row[language_list[0]])
     _voice = voice[language_list[0]]
     print(f"{Fore.YELLOW}{_word:38s}", end="")
     sys.stdout.flush()
     say(row[language_list[0]], voice[language_list[0]])
     for i in range(1, len(language_list)):
         time.sleep(timeout)
-        _word = row[language_list[i]]
+        _word = str(row[language_list[i]])
         _voice = voice[language_list[i]]
         print(f"{Fore.WHITE}| {Fore.GREEN}{_word:38s}", end="")
         sys.stdout.flush()
@@ -100,17 +101,19 @@ def interact_word(df, index, language_list, voice, timeout=2):
     return STATUS_OK
 
 
-def load_df(db_path, language_list, words_path=None, update=False):
+def load_df(db_path, language_list, words_path, update=False):
     if update:
-        pass
-    df = pd.read_pickle(db_path)
+        df = pd.read_csv(words_path)
+    else:
+        df = pd.read_pickle(db_path)
     for language in language_list:
         if language not in df.columns:
             raise RuntimeError(f"{language} is not present in vocabulary.")
     # @TODO remove line below, for debugging only.
-    df = df[df["source_1"] == "Rock 'N Learn"]
+    print(f"Total number of words: {len(df)}.")
+    df = df[df["source_1"] == "Ясно"]
+    print(f"Number of words in selected set: {len(df)}.")
     return df
-
 
 def add_count_column(df, column_list):
     for column in column_list:
@@ -120,8 +123,15 @@ def add_count_column(df, column_list):
 
 
 def main(args):
+    print("--------------------------------------------------------------------------------")
+    print("- Rosetta                                                                      -")
+    print("- Gilbert Francois Duivesteijn                                                 -")
+    print("--------------------------------------------------------------------------------")
+    print()
 
     mode = -1
+    update = False
+
     language_list = args.languages.split(",")
     if len(language_list) < 2:
         raise RuntimeError(f"Invalid language list.")
@@ -131,20 +141,22 @@ def main(args):
         raise RuntimeError(f"Mode option is invalid. Expected 1 or 2, actual {args.mode}.")
     if mode == -1:
         raise RuntimeError(f"Invalid mode.")
+    if args.update_wordlist:
+        update = True
 
-    update = False
     db_path = "data/db.pkl"
     words_path = "data/words.csv"
 
     # Load database
     df = load_df(db_path, language_list, words_path, update)
 
-
     # Add score columns if not present yet.
     req_count_list = [f"{language_list[0]}_{language_list[i]}_req_count" for i in range(1, len(language_list))]
     err_count_list = [f"{language_list[0]}_{language_list[i]}_err_count" for i in range(1, len(language_list))]
     add_count_column(df, req_count_list)
     add_count_column(df, err_count_list)
+
+    df.to_pickle(db_path)
 
     index_list = df.index.tolist()
     random.shuffle(index_list)
