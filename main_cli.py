@@ -1,4 +1,5 @@
 import pandas as pd
+import unicodedata
 import argparse
 import random
 import time
@@ -82,6 +83,7 @@ def interact_word(df, index, language_list, voice, timeout=2):
             df.at[index, f"{language_list[0]}_{language_list[i]}_req_count"] += 1
             try:
                 answer = input(f"[ {language_list[i]} ] ")
+                answer = unicodedata.normalize("NFC", answer)
             except UnicodeDecodeError:
                 print(f"[ EE ] Sorry, the backspace caused an error. Please try again.")
                 answer = ""
@@ -102,7 +104,7 @@ def interact_word(df, index, language_list, voice, timeout=2):
     return STATUS_OK
 
 
-def load_df(db_path, language_list, words_path, update=False):
+def load_df(db_path, language_list, words_path, update=False, normalize_unicode=True):
     if update:
         df = pd.read_csv(words_path)
     else:
@@ -111,6 +113,11 @@ def load_df(db_path, language_list, words_path, update=False):
         if language not in df.columns:
             raise RuntimeError(f"{language} is not present in vocabulary.")
     # @TODO remove line below, for debugging only.
+    if normalize_unicode:
+        import pdb; pdb.set_trace()
+        for column in df.columns:
+            if len(column) == 2:
+                df[column] = df[column].apply(lambda x: unicodedata.normalize("NFC", x))
     print(f"Total number of words: {len(df)}.")
     df = df[df["source_1"] == "Ясно"]
     print(f"Number of words in selected set: {len(df)}.")
