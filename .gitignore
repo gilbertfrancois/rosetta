@@ -191,3 +191,4 @@ tags
 
 .venv
 __pycache__
+/data/voice
