@@ -1,24 +1,24 @@
 RU,DE,NL,EN,source_1,source_2
 добро пожаловать,herzlich willkommen,hartelijk welkom,welcome,Ясно,1
-здравствуйте,"guten Tag, formell","goedendag, formeel",,Ясно,1
+здравствуйте,"guten Tag, formell","goedendag, formeel","hello, formal",Ясно,1
 я,ich,ik,I,Ясно,1
 а,und,en,and,Ясно,1
 кто,wer,wie,who,Ясно,1
 вы,"Sie, ihr","u, jullie",you,Ясно,1
 ты,du,jij,you,Ясно,1
-добрый день,guten Tag ,goedendag,,Ясно,1
-здравствуй,guten Tag,goedendag,,Ясно,1
+добрый день,guten Tag ,goedendag,good day,Ясно,1
+здравствуй,"guten Tag, informell","goedendag, informeel","hello, informal",Ясно,1
 привет,hallo,hallo,hello,Ясно,1
 это,"das ist, das sind","dat is, dat zijn","that is, these are",Ясно,1
 господин,Herr,Mijnheer,mister,Ясно,1
 госпожа,Frau,Mevrouw,miss,Ясно,1
 до свидания,auf wiedersehen,tot ziens,goodbye,Ясно,1
-пока,tschuss,doei,bye,Ясно,1
-нет,nein,nee,,Ясно,1
-что,was,wat,,Ясно,1
-на фотографии,auf dem Foto,op de foto,,Ясно,1
-на,"auf, in","op, in",,Ясно,1
-фотография,das Foto,de foto,,Ясно,1
+пока,tschüss,doei,bye,Ясно,1
+нет,nein,nee,no,Ясно,1
+что,was,wat,what,Ясно,1
+на фотографии,auf dem Foto,op de foto,on the picture,Ясно,1
+на,"auf, in","op, in","on, in",Ясно,1
+фотография,das Foto,de foto,the photo,Ясно,1
 дом,das Haus,het huis,the house,Rock 'N Learn,"Numbers, colors and more"
 дверь,die Tür,de deur,the door,Rock 'N Learn,"Numbers, colors and more"
 окно,das Fenster,het raam,the window,Rock 'N Learn,"Numbers, colors and more"

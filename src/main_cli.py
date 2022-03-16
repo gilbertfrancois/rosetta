@@ -6,14 +6,10 @@ import time
 from colorama import Fore, Back, Style
 import os
 import sys
+from voice import Voice
 
 
-voice = {
-    "RU": "milena",
-    "EN": "kate",
-    "DE": "anna",
-    "NL": "claire"
-}
+OS = "macos"
 
 MODE_AUDIT = 1
 MODE_INTERACTIVE = 2
@@ -45,39 +41,34 @@ def word_diff(word1, word2):
     result += Style.RESET_ALL
     return result
 
-def say(word, voice):
-    os.system(f"/usr/bin/say -v {voice} {word}")
-    
-
 def audit_word(df, index, language_list, voice, timeout=2):
     row = df.loc[index]
+    _language = language_list[0]
     _word = str(row[language_list[0]])
-    _voice = voice[language_list[0]]
     print(f"{Fore.YELLOW}{_word:38s}", end="")
     sys.stdout.flush()
-    say(row[language_list[0]], voice[language_list[0]])
+    voice.say(_language, _word)
     for i in range(1, len(language_list)):
         time.sleep(timeout)
+        _language = language_list[i]
         _word = str(row[language_list[i]])
-        _voice = voice[language_list[i]]
         print(f"{Fore.WHITE}| {Fore.GREEN}{_word:38s}", end="")
         sys.stdout.flush()
-        say(_word, _voice)
+        voice.say(_language, _word)
     print(f"{Style.RESET_ALL}\n", end="")
     sys.stdout.flush()
 
         
 def interact_word(df, index, language_list, voice, timeout=2):
     row = df.loc[index]
-    _word = row[language_list[0]]
-    _voice = voice[language_list[0]]
+    _language = language_list[0]
+    _word = str(row[language_list[0]])
     print(f"[ {language_list[0]} ] {Fore.YELLOW}{_word}{Style.RESET_ALL}")
     sys.stdout.flush()
-    say(row[language_list[0]], voice[language_list[0]])
-
+    voice.say(_language, _word)
     for i in range(1, len(language_list)):
-        _word = row[language_list[i]]
-        _voice = voice[language_list[i]]
+        _language = language_list[i]
+        _word = str(row[language_list[i]])
         is_correct = False
         while not is_correct:
             df.at[index, f"{language_list[0]}_{language_list[i]}_req_count"] += 1
@@ -100,7 +91,7 @@ def interact_word(df, index, language_list, voice, timeout=2):
                 print(f"[ XX ] {word_diff(_word, answer)}")
                 df.at[index, f"{language_list[0]}_{language_list[i]}_err_count"] += 1
                 is_correct = False
-            say(_word, _voice)
+            voice.say(_language, _word)
     return STATUS_OK
 
 
@@ -114,7 +105,6 @@ def load_df(db_path, language_list, words_path, update=False, normalize_unicode=
             raise RuntimeError(f"{language} is not present in vocabulary.")
     # @TODO remove line below, for debugging only.
     if normalize_unicode:
-        import pdb; pdb.set_trace()
         for column in df.columns:
             if len(column) == 2:
                 df[column] = df[column].apply(lambda x: unicodedata.normalize("NFC", x))
@@ -137,6 +127,13 @@ def main(args):
     print("--------------------------------------------------------------------------------")
     print()
 
+    if OS == "macos":
+        from voice_macos import VoiceMacOS
+        voice = VoiceMacOS()
+    elif OS == "polly":
+        from voice_polly import VoicePolly
+        voice = VoicePolly()
+
     mode = -1
     update = False
     repeat = args.repeat
@@ -156,8 +153,10 @@ def main(args):
     if args.update_wordlist:
         update = True
 
-    db_path = "data/db.pkl"
-    words_path = "data/words.csv"
+    for lng in language_list:
+        os.makedirs(f"../data/voice/{lng}", exist_ok=True)
+    db_path = "../data/db.pkl"
+    words_path = "../data/words.csv"
 
     # Load database
     df = load_df(db_path, language_list, words_path, update)
