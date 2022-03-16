@@ -192,3 +192,4 @@ tags
 .venv
 __pycache__
 /data/voice
+/data/db.pkl
