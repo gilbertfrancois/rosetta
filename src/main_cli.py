@@ -7,6 +7,7 @@ from colorama import Fore, Back, Style
 import os
 import sys
 from voice import Voice
+from vocabulary import Vocabulary
 
 
 OS = "macos"
@@ -25,8 +26,14 @@ def parse_arguments(argv):
     parser.add_argument("-r", "--repeat", type=bool, required=False, help="Endless repeat.")
     return parser.parse_args(argv)
 
-def word_info(word):
-    return Fore.YELLOW + word + Style.RESET_ALL
+def word_yellow(word, width=0):
+    return Fore.YELLOW + word.ljust(width) + Style.RESET_ALL
+
+def word_red(word, width=0):
+    return Fore.RED + word.ljust(width) + Style.RESET_ALL
+
+def word_green(word, width=0):
+    return Fore.GREEN + word.ljust(width) + Style.RESET_ALL
 
 def word_diff(word1, word2):
     result = ""
@@ -41,29 +48,37 @@ def word_diff(word1, word2):
     result += Style.RESET_ALL
     return result
 
-def audit_word(df, index, language_list, voice, timeout=2):
-    row = df.loc[index]
+def audit_word(vocabulary, language_list, voice, timeout, repeat):
+    width = 120 // len(language_list)
+    width = min(width, 40)
+    width = max(width, 20)
+    row = vocabulary.sample(repeat=repeat)
+    if row is None:
+        return False
     _language = language_list[0]
     _word = str(row[language_list[0]])
-    print(f"{Fore.YELLOW}{_word:38s}", end="")
+    print(f"{word_yellow(_word, width)}", end="")
     sys.stdout.flush()
     voice.say(_language, _word)
     for i in range(1, len(language_list)):
         time.sleep(timeout)
         _language = language_list[i]
         _word = str(row[language_list[i]])
-        print(f"{Fore.WHITE}| {Fore.GREEN}{_word:38s}", end="")
+        print(f"|  {word_green(_word, width)}", end="")
         sys.stdout.flush()
         voice.say(_language, _word)
-    print(f"{Style.RESET_ALL}\n", end="")
+        vocabulary.increase_count(row.name, "audit", language_list[0], language_list[i])
+    print(f"\n", end="")
     sys.stdout.flush()
+    time.sleep(timeout + 1)
+    return True
 
         
-def interact_word(df, index, language_list, voice, timeout=2):
-    row = df.loc[index]
+def interact_word(vocabulary, language_list, voice, repeat):
+    row = vocabulary.sample()
     _language = language_list[0]
     _word = str(row[language_list[0]])
-    print(f"[ {language_list[0]} ] {Fore.YELLOW}{_word}{Style.RESET_ALL}")
+    print(f"[ {language_list[0]} ] {word_yellow(_word)}")
     sys.stdout.flush()
     voice.say(_language, _word)
     for i in range(1, len(language_list)):
@@ -71,12 +86,12 @@ def interact_word(df, index, language_list, voice, timeout=2):
         _word = str(row[language_list[i]])
         is_correct = False
         while not is_correct:
-            df.at[index, f"{language_list[0]}_{language_list[i]}_req_count"] += 1
+            vocabulary.increase_count(row.name, "req", language_list[0], language_list[i])
             try:
                 answer = input(f"[ {language_list[i]} ] ")
                 answer = unicodedata.normalize("NFC", answer)
             except UnicodeDecodeError:
-                print(f"[ EE ] Sorry, the backspace caused an error. Please try again.")
+                print(f"[ {word_red('EE')} ] Sorry, the backspace caused an error. Please try again.")
                 answer = ""
                 continue
             if answer == "quit":
@@ -85,39 +100,14 @@ def interact_word(df, index, language_list, voice, timeout=2):
                 print(f"[ >> ] skipped")
                 is_correct = True
             elif answer == _word:
-                print(f"[ OK ] {word_diff(_word, answer)}")
+                print(f"[ {word_green('Ok')} ] {word_diff(_word, answer)}")
                 is_correct = True
             else:
-                print(f"[ XX ] {word_diff(_word, answer)}")
-                df.at[index, f"{language_list[0]}_{language_list[i]}_err_count"] += 1
+                print(f"[ {word_red('XX')} ] {word_diff(_word, answer)}")
+                vocabulary.increase_count(row.name, "err", language_list[0], language_list[i])
                 is_correct = False
             voice.say(_language, _word)
     return STATUS_OK
-
-
-def load_df(db_path, language_list, words_path, update=False, normalize_unicode=True):
-    if update:
-        df = pd.read_csv(words_path)
-    else:
-        df = pd.read_pickle(db_path)
-    for language in language_list:
-        if language not in df.columns:
-            raise RuntimeError(f"{language} is not present in vocabulary.")
-    # @TODO remove line below, for debugging only.
-    if normalize_unicode:
-        for column in df.columns:
-            if len(column) == 2:
-                df[column] = df[column].apply(lambda x: unicodedata.normalize("NFC", x))
-    print(f"Total number of words: {len(df)}.")
-    df = df[df["source_1"] == "Ясно"]
-    print(f"Number of words in selected set: {len(df)}.")
-    return df
-
-def add_count_column(df, column_list):
-    for column in column_list:
-        if column not in df.columns:
-            df[column] = 0
-        df[column].fillna(0, inplace=True)
 
 
 def main(args):
@@ -152,47 +142,27 @@ def main(args):
         raise RuntimeError(f"Invalid mode.")
     if args.update_wordlist:
         update = True
-
+    # Prepare cache folders for voice files.
     for lng in language_list:
         os.makedirs(f"../data/voice/{lng}", exist_ok=True)
-    db_path = "../data/db.pkl"
-    words_path = "../data/words.csv"
 
     # Load database
-    df = load_df(db_path, language_list, words_path, update)
-
-    # Add score columns if not present yet.
-    req_count_list = [f"{language_list[0]}_{language_list[i]}_req_count" for i in range(1, len(language_list))]
-    err_count_list = [f"{language_list[0]}_{language_list[i]}_err_count" for i in range(1, len(language_list))]
-    add_count_column(df, req_count_list)
-    add_count_column(df, err_count_list)
-
-    df.to_pickle(db_path)
+    vocabulary = Vocabulary("../data", update=update)
+    vocabulary.set_language_list(language_list)
 
     if mode == MODE_INTERACTIVE:
         running = True
         while running:
-            index_list = df.index.tolist()
-            random.shuffle(index_list)
-            for index in index_list:
-                status = interact_word(df, index, language_list, voice)
-                df.to_pickle(db_path)
-                if status == STATUS_EXIT:
-                    running = False
-                    break
-            if not repeat:
-                running = False
+            status = interact_word(vocabulary, language_list, voice, repeat=repeat)
+            vocabulary.save_database()
 
     elif mode == MODE_AUDIT:
         running = True
         while running:
-            index_list = df.index.tolist()
-            random.shuffle(index_list)
-            for index in index_list:
-                audit_word(df, index, language_list, voice)
-                time.sleep(3)
-        if not repeat:
-            running = False
+            status = audit_word(vocabulary, language_list, voice, timeout=2, repeat=repeat)
+            vocabulary.save_database()
+            if not status:
+                running = False
 
     print("[ .. ] Bye!")
 

@@ -14,15 +14,21 @@ class Vocabulary:
         self.vocabulary_path = os.path.join(data_folder, "words.csv")
         self.normalize_unicode = normalize_unicode
         self.df = pd.DataFrame()
+        # All indices in the DataFrame
         self.base_index = set()
+        # Flagged by user as 'difficult word, repeat more'
         self.add_index = set()
+        # Fragged by user as 'easy word, please skip'
         self.del_index = set()
+        # Final index list for rehearsal.
         self.index = list()
         self.pointer = 0
+        if update:
+            self.load_new_vocabulary()
 
     def set_language_list(self, language_list):
         self.language_list = language_list
-        for language in language_list:
+        for language in self.language_list:
             if language not in self.df.columns:
                 raise RuntimeError(f"{language} is not present in vocabulary.")
 
@@ -32,9 +38,14 @@ class Vocabulary:
             for column in self.df.columns:
                 if len(column) == 2:
                     self.df[column] = self.df[column].apply(lambda x: unicodedata.normalize("NFC", x))
+        # @TODO merge with old database to preserve scores.
+        self.df = self.df[self.df["source_2"] == "2"]
+        self.save_database()
+        self.shuffle()
 
     def load_database(self):
         self.df = pd.read_pickle(self.database_path)
+        self.shuffle()
 
     def save_database(self):
         self.df.to_pickle(self.database_path)
@@ -53,13 +64,33 @@ class Vocabulary:
         random.shuffle(self.index)
         self.pointer = 0
 
-    def sample(self):
+    def sample(self, repeat=True):
         if self.pointer < len(self.index):
             index = self.index[self.pointer]
             self.pointer += 1
-        else:
+            return self.df.loc[index]
+        elif repeat:
             self.shuffle()
-            self.pointer = 0
             index = self.index[self.pointer]
-        return self.df.loc[index]
+            self.pointer += 1
+            return self.df.loc[index]
+        else:
+            return None
+
+    def increase_count(self, index, type, lng1, lng2):
+        column = f"{lng1}_{lng2}_{type}_count"
+        if column not in self.df.columns:
+            self.add_count_column(column)
+        self.df.at[index, f"{lng1}_{lng2}_{type}_count"] += 1
+
+    def add_score_columns(self):
+        req_count_list = [f"{self.language_list[0]}_{self.language_list[i]}_req_count" for i in range(1, len(self.language_list))]
+        err_count_list = [f"{self.language_list[0]}_{self.language_list[i]}_err_count" for i in range(1, len(self.language_list))]
+        self.add_count_column(req_count_list)
+        self.add_count_column(err_count_list)
+
+    def add_count_column(self, column):
+        if column not in self.df.columns:
+            self.df[column] = 0
+        self.df[column].fillna(0, inplace=True)
 
