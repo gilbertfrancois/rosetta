@@ -1,89 +1,121 @@
-RU,DE,NL,EN,source_1,source_2
-добро пожаловать,herzlich willkommen,hartelijk welkom,welcome,Ясно,1
-здравствуйте,"guten Tag, formell","goedendag, formeel","hello, formal",Ясно,1
-я,ich,ik,I,Ясно,1
-а,und,en,and,Ясно,1
-кто,wer,wie,who,Ясно,1
-вы,"Sie, ihr","u, jullie",you,Ясно,1
-ты,du,jij,you,Ясно,1
-добрый день,guten Tag ,goedendag,good day,Ясно,1
-здравствуй,"guten Tag, informell","goedendag, informeel","hello, informal",Ясно,1
-привет,hallo,hallo,hello,Ясно,1
-это,"das ist, das sind","dat is, dat zijn","that is, these are",Ясно,1
-господин,Herr,Mijnheer,mister,Ясно,1
-госпожа,Frau,Mevrouw,miss,Ясно,1
-до свидания,auf wiedersehen,tot ziens,goodbye,Ясно,1
-пока,tschüss,doei,bye,Ясно,1
-нет,nein,nee,no,Ясно,1
-что,was,wat,what,Ясно,1
-на фотографии,auf dem Foto,op de foto,on the picture,Ясно,1
-на,"auf, in","op, in","on, in",Ясно,1
-фотография,das Foto,de foto,the photo,Ясно,1
-дом,das Haus,het huis,the house,Rock 'N Learn,"Numbers, colors and more"
-дверь,die Tür,de deur,the door,Rock 'N Learn,"Numbers, colors and more"
-окно,das Fenster,het raam,the window,Rock 'N Learn,"Numbers, colors and more"
-стол,der Tisch,de tafel,the table,Rock 'N Learn,"Numbers, colors and more"
-стул,der Stuhl,de stoel,the chair,Rock 'N Learn,"Numbers, colors and more"
-диван,der Sofa,de bank,the couch,Rock 'N Learn,"Numbers, colors and more"
-лестница,die Treppe,de trap,the stairs,Rock 'N Learn,"Numbers, colors and more"
-кровать,das Bett,het bed,the bed,Rock 'N Learn,"Numbers, colors and more"
-одеяло,die Decke,de deken,the blanket,Rock 'N Learn,"Numbers, colors and more"
-подушка,das Kissen,het kussen,the pillow,Rock 'N Learn,"Numbers, colors and more"
-лампа,die Lampe,de lamp,the lamp,Rock 'N Learn,"Numbers, colors and more"
-выключатель,der Lichtschalter,de lichtschakelaar,the light switch,Rock 'N Learn,"Numbers, colors and more"
-шкаф,der Schrank,de kast,the closet,Rock 'N Learn,"Numbers, colors and more"
-выдвижной ящик,die Schublade,de la,the drawer,Rock 'N Learn,"Numbers, colors and more"
-ручка,der Kugelschreiber,de pen,the pen,Rock 'N Learn,"Numbers, colors and more"
-мелки,die Buntstifte,de kleurpotloden,the crayons,Rock 'N Learn,"Numbers, colors and more"
-бумага,das Papier,het papier,the paper,Rock 'N Learn,"Numbers, colors and more"
-карандаш,der Bleistift,het potlood,the pencil,Rock 'N Learn,"Numbers, colors and more"
-вентилятор,der Ventilator,de ventilator,the fan,Rock 'N Learn,"Numbers, colors and more"
-цвет,die Farbe,de kleur,the colour,Rock 'N Learn,"Numbers, colors and more"
-красный,rot,rood,red,Rock 'N Learn,"Numbers, colors and more"
-жёлтый,gelb,geel,yellow,Rock 'N Learn,"Numbers, colors and more"
-синий,blau,blauw,blue,Rock 'N Learn,"Numbers, colors and more"
-фирма,die Firma,de firma,the firm,Ясно,1
-фабрика,die Fabrik,de fabriek,the factory,Ясно,1
-фонтан,die Fontäne,de fontein,the fountain,Ясно,1
-фильм,der Film,de film,the film,Ясно,1
-характер,der Charakter,het karakter,the character,Ясно,1
-архитектура,die Architektur,de architectuur,the architecture,Ясно,1
-цирк,der Zirkus,het circus,the circus,Ясно,1
-центр,das Zentrum,het centrum,the center,Ясно,1
-сцена,die Bühne,het toneel,the stage,Ясно,1
-специалист,der Spezialist,de specialist,the specialist,Ясно,1
-чемпион,der Champion,de kampioen,the champion,Ясно,1
-почта,die Post,de post,the post,Ясно,1
-театр,das Theater,het theater,the theater,Ясно,1
-музей,das Museum,het museum,the museum,Ясно,1
-кинотеатр,das Kino,de bioscoop,the cinema,Ясно,1
-магазин,"das Geschäft, der Laden","de winkel, de zaak, het bedrijf","the shop, the company",Ясно,1
-университет,die Universität,de universiteit,the university,Ясно,1
-библиотека,die Bibliothek,de bibliotheek,the library,Ясно,1
-стадион,das Stadion,het stadion,the stadium,Ясно,1
-ресторан,das Restaurant,het restaurant,the restaurant,Ясно,1
-киоск,der Kiosk,de kiosk,the kiosk,Ясно,1
-метро,die U-Bahn,de metro,the underground,Ясно,1
-парк,der Park,het park,the parc,Ясно,1
-такси,das Taxi,de taxi,the taxi,Ясно,1
-кто это,Wer ist das?,Wie is dat?,Who is that?,Ясно,1
-спортсмен,der Sportler,de sporter,the sportsman,Ясно,1
-политик,"der Politiker, die Politikerin",de politicus,the politician,Ясно,1
-теннисистка,die Tennisspielerin,de tennisster,the tennisplayer,Ясно,1
-прима-балерина,die Prima-Ballerina,de prima ballerina,the balletdancer,Ясно,1
-кремл,der Kreml,het Kremlin,the Kremlin,Ясно,1
-субъект,das Subjekt,het onderwerp,the subject,Ясно,1
-объект,das Objekt,het voorwerp,the object,Ясно,1
-объектив,das Objectiv,het objectief,the objective,Ясно,1
-делобые контакы,die Geschäftskontakte,de zakenrelaties,the business relations,Ясно,1
-Россиа,Russland,Rusland,Russia,Ясно,1
-для меня,für mich,voor mij,for me,Ясно,1
-царь,der Zar,de tsaar,the tsar,Ясно,1
-и,und,en,and,Ясно,1
-вулкан,der Vulkan,de vulkaan,the volcano,Ясно,1
-сибирь,das Sibirien,het Siberië,Siberia,Ясно,1
-тундра,die Tundra,de toendra,the tundra,Ясно,1
-зима,der Winter,de winter,the winter,Ясно,1
-Чёрное море,das Schwarzes Meer,de zwarte zee,the black sea,Ясно,1
-пляж,der Strand,het strand,the beach,Ясно,1
-фрукты,"das Obst, die Früchte","het fruit, de vruchten",the fruit,Ясно,1
+RU,DE,NL,EN,source_1,source_2,
+добро пожаловать,herzlich willkommen,hartelijk welkom,welcome,Ясно,1,
+здравствуйте,"guten Tag, formell","goedendag, formeel","hello, formal",Ясно,1,
+я,ich,ik,I,Ясно,1,
+а,und,en,and,Ясно,1,
+кто,wer,wie,who,Ясно,1,
+вы,"Sie, ihr","u, jullie",you,Ясно,1,
+ты,du,jij,you,Ясно,1,
+добрый день,guten Tag ,goedendag,good day,Ясно,1,
+здравствуй,"guten Tag, informell","goedendag, informeel","hello, informal",Ясно,1,
+привет,hallo,hallo,hello,Ясно,1,
+это,"das ist, das sind","dat is, dat zijn","that is, these are",Ясно,1,
+господин,Herr,Mijnheer,mister,Ясно,1,
+госпожа,Frau,Mevrouw,miss,Ясно,1,
+до свидания,auf wiedersehen,tot ziens,goodbye,Ясно,1,
+пока,tschüss,doei,bye,Ясно,1,
+нет,nein,nee,no,Ясно,1,
+что,was,wat,what,Ясно,1,
+на фотографии,auf dem Foto,op de foto,on the picture,Ясно,1,
+на,"auf, in","op, in","on, in",Ясно,1,
+фотография,das Foto,de foto,the photo,Ясно,1,
+дом,das Haus,het huis,the house,Rock 'N Learn,"Numbers, colors and more",
+дверь,die Tür,de deur,the door,Rock 'N Learn,"Numbers, colors and more",
+окно,das Fenster,het raam,the window,Rock 'N Learn,"Numbers, colors and more",
+стол,der Tisch,de tafel,the table,Rock 'N Learn,"Numbers, colors and more",
+стул,der Stuhl,de stoel,the chair,Rock 'N Learn,"Numbers, colors and more",
+диван,der Sofa,de bank,the couch,Rock 'N Learn,"Numbers, colors and more",
+лестница,die Treppe,de trap,the stairs,Rock 'N Learn,"Numbers, colors and more",
+кровать,das Bett,het bed,the bed,Rock 'N Learn,"Numbers, colors and more",
+одеяло,die Decke,de deken,the blanket,Rock 'N Learn,"Numbers, colors and more",
+подушка,das Kissen,het kussen,the pillow,Rock 'N Learn,"Numbers, colors and more",
+лампа,die Lampe,de lamp,the lamp,Rock 'N Learn,"Numbers, colors and more",
+выключатель,der Lichtschalter,de lichtschakelaar,the light switch,Rock 'N Learn,"Numbers, colors and more",
+шкаф,der Schrank,de kast,the closet,Rock 'N Learn,"Numbers, colors and more",
+выдвижной ящик,die Schublade,de la,the drawer,Rock 'N Learn,"Numbers, colors and more",
+ручка,der Kugelschreiber,de pen,the pen,Rock 'N Learn,"Numbers, colors and more",
+мелки,die Buntstifte,de kleurpotloden,the crayons,Rock 'N Learn,"Numbers, colors and more",
+бумага,das Papier,het papier,the paper,Rock 'N Learn,"Numbers, colors and more",
+карандаш,der Bleistift,het potlood,the pencil,Rock 'N Learn,"Numbers, colors and more",
+вентилятор,der Ventilator,de ventilator,the fan,Rock 'N Learn,"Numbers, colors and more",
+цвет,die Farbe,de kleur,the colour,Rock 'N Learn,"Numbers, colors and more",
+красный,rot,rood,red,Rock 'N Learn,"Numbers, colors and more",
+жёлтый,gelb,geel,yellow,Rock 'N Learn,"Numbers, colors and more",
+синий,blau,blauw,blue,Rock 'N Learn,"Numbers, colors and more",
+фирма,die Firma,de firma,the firm,Ясно,1,
+фабрика,die Fabrik,de fabriek,the factory,Ясно,1,
+фонтан,die Fontäne,de fontein,the fountain,Ясно,1,
+фильм,der Film,de film,the film,Ясно,1,
+характер,der Charakter,het karakter,the character,Ясно,1,
+архитектура,die Architektur,de architectuur,the architecture,Ясно,1,
+цирк,der Zirkus,het circus,the circus,Ясно,1,
+центр,das Zentrum,het centrum,the center,Ясно,1,
+сцена,die Bühne,het toneel,the stage,Ясно,1,
+специалист,der Spezialist,de specialist,the specialist,Ясно,1,
+чемпион,der Champion,de kampioen,the champion,Ясно,1,
+почта,die Post,de post,the post,Ясно,1,
+театр,das Theater,het theater,the theater,Ясно,1,
+музей,das Museum,het museum,the museum,Ясно,1,
+кинотеатр,das Kino,de bioscoop,the cinema,Ясно,1,
+магазин,"das Geschäft, der Laden","de winkel, de zaak, het bedrijf","the shop, the company",Ясно,1,
+университет,die Universität,de universiteit,the university,Ясно,1,
+библиотека,die Bibliothek,de bibliotheek,the library,Ясно,1,
+стадион,das Stadion,het stadion,the stadium,Ясно,1,
+ресторан,das Restaurant,het restaurant,the restaurant,Ясно,1,
+киоск,der Kiosk,de kiosk,the kiosk,Ясно,1,
+метро,die U-Bahn,de metro,the underground,Ясно,1,
+парк,der Park,het park,the parc,Ясно,1,
+такси,das Taxi,de taxi,the taxi,Ясно,1,
+кто это,Wer ist das?,Wie is dat?,Who is that?,Ясно,1,
+спортсмен,der Sportler,de sporter,the sportsman,Ясно,1,
+политик,"der Politiker, die Politikerin",de politicus,the politician,Ясно,1,
+теннисистка,die Tennisspielerin,de tennisster,the tennisplayer,Ясно,1,
+прима-балерина,die Prima-Ballerina,de prima ballerina,the balletdancer,Ясно,1,
+кремл,der Kreml,het Kremlin,the Kremlin,Ясно,1,
+субъект,das Subjekt,het onderwerp,the subject,Ясно,1,
+объект,das Objekt,het voorwerp,the object,Ясно,1,
+объектив,das Objectiv,het objectief,the objective,Ясно,1,
+делобые контакы,die Geschäftskontakte,de zakenrelaties,the business relations,Ясно,1,
+Россиа,Russland,Rusland,Russia,Ясно,1,
+для меня,für mich,voor mij,for me,Ясно,1,
+царь,der Zar,de tsaar,the tsar,Ясно,1,
+и,und,en,and,Ясно,1,
+вулкан,der Vulkan,de vulkaan,the volcano,Ясно,1,
+сибирь,das Sibirien,het Siberië,Siberia,Ясно,1,
+тундра,die Tundra,de toendra,the tundra,Ясно,1,
+зима,der Winter,de winter,the winter,Ясно,1,
+Чёрное море,das Schwarzes Meer,de zwarte zee,the black sea,Ясно,1,
+пляж,der Strand,het strand,the beach,Ясно,1,
+фрукты,"das Obst, die Früchte","het fruit, de vruchten",the fruit,Ясно,1,
+мы,wir,wij,we,Ясно,2,
+нз,aus,uit,out,Ясно,2,
+Познакомьтесь,Machen Sie sich bekannt,Maak u bekend,Introduce yourself,Ясно,2,
+пожалуйста,bitte,alstublieft,please,Ясно,2,
+как,wie,hoe,how,Ясно,2,
+Как вас зовут?,Wie heissen Sie?,Hoe heet u?,What’s your name?,Ясно,2,
+меня зовут,ich heisse,ik heet,I am called,Ясно,2,
+очень,sehr,zeer,very,Ясно,2,
+приятно,angenehm,aangenaam,nice,Ясно,2,
+Как тебя зовут?,Wie heisst du?,Hoe heet je?,What's your name?,Ясно,2,
+давайте познакомимся,Machen wir uns bekannt,Wij maken ons bekend,We introduce ourselves,Ясно,2,
+Как ваши дела?,Wie geht es Ihnen?,Hoe gaat het met u?,How do you do?,Ясно,2,
+Как твои дела?,Wie geht es dir?,Hoe gaat het met jou?,How do you do?,Ясно,2,
+Как у тебя дела?,Wie geht es dir?,Hoe gaat het met jou?,How do you do?,Ясно,2,
+спасибо,danke,bedankt,thanks,Ясно,2,
+У меня всё хорошо,Mir geht es gut,Het gaat goed met mij,I’m fine,Ясно,2,
+всё,alles,alles,all,Ясно,2,
+хорошо,gut,goed,good,Ясно,2,
+Всё в порядке,Alles in Ordnung,Alles in orde,All is fine,Ясно,2,
+ничего,es geht,het gaat,it is going,Ясно,2,
+нормально,normal,normaal,normal,Ясно,2,
+не,nicht,niets,nothing,Ясно,2,
+не очень,nichts besonderes,niets bijzonders,nothing special,Ясно,2,
+тоже,auch,ook,also,Ясно,2,
+пложо,schlecht,slecht,bad,Ясно,2,
+откыда,woher?,waarvandaan,from where,Ясно,2,
+скажи,Sag!,Zeg!,Say!,Ясно,2,
+скажите,Sagen Sie!,Zegt!,Say!,Ясно,2,
+где,wo?,waar?,where?,Ясно,2,
+вот,"da, hier ist, hier sind","daar, hier is, hier zijn","there, here is, here are",Ясно,2,
+интересно,interessant,interessant,interesting,Ясно,2,
+наверное,wahrscheinlich,waarschijnlijk,probably,Ясно,2,
