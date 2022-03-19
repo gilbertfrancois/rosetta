@@ -14,7 +14,7 @@ class Voice:
     def data_folder(self):
         return os.path.join(os.path.dirname(__file__), "..", "data")
 
-    def filename(self, language, text, ext="mp3"):
+    def get_filename(self, language, text, ext="mp3"):
         md5 = tu.hash(text)
         if language == "RU":
             text = tu.cyrillic2latin(text)
@@ -24,9 +24,9 @@ class Voice:
         filename = f"{language}_{text}_{md5}.{ext}"
         return filename
 
-    def filepath(self, language, text, ext="mp3"):
-        _filename = self.filename(language, text, ext)
-        return os.path.join(self.cache_folder, language, _filename)
+    def get_filepath(self, language, text, ext="mp3"):
+        filename = self.get_filename(language, text, ext)
+        return os.path.join(self.cache_folder, language, filename)
 
 
 
