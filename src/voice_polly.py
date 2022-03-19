@@ -27,13 +27,13 @@ class VoicePolly(Voice):
     def say(self, language, text):
         if self.voice.get(language) is None:
             raise RuntimeError(f"No voice mapping found for language {language}.")
-        _filepath = self.filepath(language, text)
-        if not os.path.exists(_filepath):
+        filepath = self.get_filepath(language, text)
+        if not os.path.exists(filepath):
             response = self.polly_client.synthesize_speech(VoiceId=self.voice.get(language),
-                            OutputFormat='mp3',
+                            OutputFormat='pcm',
                             Text=text,
                             Engine=self.engine[language])
-            with open(_filepath, "wb") as fp:
+            with open(filepath, "wb") as fp:
                 fp.write(response['AudioStream'].read())
 
-        os.system(f"play {_filepath} >/dev/null 2>&1")
+        os.system(f"play {filepath} >/dev/null 2>&1")

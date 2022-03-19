@@ -15,6 +15,14 @@ class VoiceMacOS(Voice):
     def say(self, language, text):
         if self.voice.get(language) is None:
             raise RuntimeError(f"No voice mapping found for language {language}.")
-        status = os.system(f"/usr/bin/say -v {self.voice.get(language)} {text}")
-        if status != 0:
-            raise RuntimeError(f"Hint: Download voice {self.voice[language]} in System Preferences -> Accessibility -> Spoken Content.")
+
+
+
+        filepath = self.get_filepath(language, text)
+        if not os.path.exists(filepath):
+            status = os.system(f"/usr/bin/say -v {self.voice.get(language)} {text}")
+            if status != 0:
+                print(f"Hint: Download voice {self.voice[language]} in System Preferences -> Accessibility -> Spoken Content.")
+                exit(1)
+            
+        os.system(f"play {filepath} >/dev/null 2>&1")
