@@ -30,7 +30,8 @@ class VoicePolly(Voice):
         filepath = self.get_filepath(language, text)
         if not os.path.exists(filepath):
             response = self.polly_client.synthesize_speech(VoiceId=self.voice.get(language),
-                            OutputFormat='pcm',
+                            OutputFormat='mp3',
+                            SampleRate="22050",
                             Text=text,
                             Engine=self.engine[language])
             with open(filepath, "wb") as fp:
