@@ -1,12 +1,9 @@
-import pandas as pd
 import unicodedata
 import argparse
-import random
 import time
-from colorama import Fore, Back, Style
+from colorama import Fore, Style
 import os
 import sys
-from voice import Voice
 from vocabulary import Vocabulary
 
 
@@ -117,12 +114,16 @@ def main(args):
     print("--------------------------------------------------------------------------------")
     print()
 
+    voice = None
     if OS == "macos":
         from voice_macos import VoiceMacOS
         voice = VoiceMacOS()
     elif OS == "polly":
         from voice_polly import VoicePolly
         voice = VoicePolly()
+    else:
+        from voice import Voice
+        voice = Voice()
 
     mode = -1
     update = False
