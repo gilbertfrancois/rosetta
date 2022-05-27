@@ -149,6 +149,7 @@ def main(args):
     # Load database
     vocabulary = Vocabulary("../data", update=update)
     vocabulary.set_language_list(language_list)
+    vocabulary.get_source_sets()
 
     if mode == MODE_INTERACTIVE:
         running = True

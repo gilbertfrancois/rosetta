@@ -1,4 +1,5 @@
 import os
+from typing import overload
 import hashlib
 import text_utils as tu
 
@@ -8,7 +9,10 @@ class Voice:
         self.cache_folder = os.path.join(self.data_folder(), "voice")
         os.makedirs(self.cache_folder, exist_ok=True)
 
-    def say(self, lng, text):
+    def say(self, language, text):
+        pass
+
+    def to_mp3(self, language, text):
         pass
 
     def data_folder(self):

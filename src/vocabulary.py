@@ -25,6 +25,7 @@ class Vocabulary:
         self.pointer = 0
         if update:
             self.load_new_vocabulary()
+        self.source_sets = None
 
     def set_language_list(self, language_list):
         self.language_list = language_list
@@ -39,12 +40,14 @@ class Vocabulary:
                 if len(column) == 2:
                     self.df[column] = self.df[column].apply(lambda x: unicodedata.normalize("NFC", x))
         # @TODO merge with old database to preserve scores.
-        self.df = self.df[self.df["source_2"] == "2"]
+        # self.df = self.df[self.df["source_2"] == "2"]
         self.save_database()
+        self.get_source_sets()
         self.shuffle()
 
     def load_database(self):
         self.df = pd.read_pickle(self.database_path)
+        self.get_source_sets()
         self.shuffle()
 
     def save_database(self):
@@ -94,3 +97,17 @@ class Vocabulary:
             self.df[column] = 0
         self.df[column].fillna(0, inplace=True)
 
+    def get_source_sets(self):
+        dfg1 = self.df.groupby(["source_1"]).size().reset_index(name="freq")
+        dfg1["source_2"] = None
+        dfg1 = dfg1.sort_values(["source_1"])
+        dfg2 = self.df.groupby(["source_1", "source_2"]).size().reset_index(name="freq")
+        dfg2 = dfg2.sort_values(["source_1", "source_2"])
+        dfc= pd.concat([dfg1, dfg2]).reset_index()
+        dfc["sources_label"] = ""
+        for index, row in dfc.iterrows():
+            label = str(row["source_1"])
+            if row["source_2"] is not None:
+                label += " | " + str(row["source_2"])
+            dfc.at[index, "sources_label"] = label
+        return dfc
