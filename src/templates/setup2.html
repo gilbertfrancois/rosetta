@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>BLiTzBLiT :: Focus Button Setup</title>
+    <style>
+        body {
+            background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+            background-size: 400% 400%;
+            animation: gradient 15s ease infinite;
+            color: #ffffff;
+            font-family: 'Helvetica', 'Roboto', 'Arial', sans-serif;
+        }
+
+        @keyframes gradient {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        .container {
+            margin: 2rem auto 0 auto;
+            max-width: 600px;
+            padding: 1em;
+        }
+        .footer {
+            font-size: xx-small;
+        } 
+		.column_left {
+			flex: 1;
+			margin-right: 12pt;
+			padding-bottom: 40pt;
+			border-bottom: 1px solid white;
+		}
+		.column_right {
+			flex: 1;
+			margin-left: 12pt;
+			padding-bottom: 40pt;
+			border-bottom: 1px solid white;
+		}
+		.column_left_nb {
+			flex: 1;
+			margin-right: 12pt;
+		}
+
+		.column_right_nb {
+			flex: 1;
+			margin-left: 12pt;
+		}
+
+		.row {
+			margin-top: 40pt;
+			display: flex;
+			width: 100%;
+		}
+
+		.title {
+			font-size: 48pt;
+			line-height: 70%;
+			text-align: right;
+		}
+
+        a {
+            color: white;
+        }
+
+		p {
+			text-align: justify;
+		}
+
+        form {
+            display: grid;
+            margin: 0 0 0 0;
+			grid-template-columns: 100%;
+        }
+
+        form select {
+            appearance: none;
+            background: transparent;
+            border: 1px solid white;
+            color: white;
+            padding: 0.7em;
+            -webkit-appearance: none;
+            border-radius: 0;
+            margin: 12pt 0 12pt 0;
+        }
+
+        form select:focus {
+            outline: 3px solid white;
+        }
+
+        form input {
+            background: transparent;
+            color: white;
+            padding: 0.7em;
+            margin: 12pt 0 12pt 0;
+            border: 1px solid white;
+        }
+
+        form input:focus {
+            outline: 3px solid white;
+        }
+
+        form button {
+            background-color: transparent;
+            color: white;
+            padding: 0.7em;
+            border: 1px solid white;
+            margin: 12pt 0 12pt 0;
+        }
+
+        form button:hover {
+            background: white;
+            color: black;
+        }
+
+		::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+			color: white;
+			opacity: 0.5;
+		}
+
+		:-ms-input-placeholder { /* Internet Explorer 10-11 */
+			color: white;
+			opacity: 0.5;
+		}
+
+		::-ms-input-placeholder { /* Microsoft Edge */
+			color: white;
+			opacity: 0.5;
+		}
+
+    </style>
+</head>
+<body>
+<div class="container">
+	<div class="row">
+	<div class="column_left">
+		<div class="title">focus button setup</div>
+	</div>
+	<div class="column_right">
+    <p>
+        Welcome to the <strong>Focus Button</strong> setup screen. The Focus Button is your best tool to show
+        offline and online that you want to get stuff done without interruptions.
+        Get your Slack Access token at <a href="https://slackstatus.blitzblit.com">BLiTzBLiT</a>.
+    </p>
+	</div>
+	</div>
+	<div class="row">
+		<div class="column_left">
+			&nbsp;	
+		</div>
+		<div class="column_right">
+			<form class="form1" method="get" action="setting">
+				<select id="ssid" name="ssid">
+					<option value="net1">net1</option>
+					<option value="net2">net2</option>
+					<option value="net3">net3</option>
+				</select>
+
+				<input type="password" id="password" name="password" placeholder="Wi-Fi password">
+
+				<input type="text" id="slack_token" name="slack_token" placeholder="Slack access token: xoxo-...">
+
+				<button type="submit" value="Submit">Save</button>
+			</form>
+		</div>
+	</div>
+	<div class="row">
+		<div class="column_left_nb">
+			&nbsp;	
+		</div>
+		<div class="column_right_nb">
+			<span class="footer">Copyright 2021, 2022, Gilbert Fran&ccedil;ois Duivesteijn</span>
+		</div>
+	</div>
+</div>
+
+</body>
+</html>

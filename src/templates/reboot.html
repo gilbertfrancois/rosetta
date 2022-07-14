@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>BLiTzBLiT :: Focus Button Setup</title>
+    <style>
+        body {
+            background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+            background-size: 400% 400%;
+            animation: gradient 15s ease infinite;
+            color: #ffffff;
+            font-family: 'Roboto', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+        }
+
+        @keyframes gradient {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        .container {
+            margin: 2rem auto 0 auto;
+            max-width: 600px;
+            padding: 1em;
+        }
+        .footer {
+            font-size: xx-small;
+        }
+        a {
+            color: white;
+        }
+        form {
+            display: grid;
+            margin: 1.0em 0 1.0em 0;
+        }
+
+        form input {
+            background: transparent;
+            color: white;
+            padding: 0.7em;
+            /*width: 100%;*/
+            border: 1px solid white;
+        }
+
+        form button {
+            background-color: transparent;
+            color: white;
+            padding: 0.7em;
+            /*width: 100%;*/
+            border: 1px solid white;
+        }
+
+        form button:hover {
+            background: white;
+            color: black;
+        }
+
+        select {
+            appearance: none;
+            background: transparent;
+            border: 1px solid white;
+            color: white;
+            padding: 0.7em;
+            -webkit-appearance: none;
+            border-radius: 0;
+        }
+
+        select:focus {
+            outline: 3px solid white;
+        }
+
+        label {
+            padding: 0.5em 0.5em 0.5em 0;
+        }
+
+        input {
+            padding: 0.7em;
+            margin-bottom: 0.5rem;
+        }
+
+        input:focus {
+            outline: 3px solid white;
+        }
+
+        @media (min-width: 400px) {
+            form {
+                grid-template-columns: 200px 1fr;
+                grid-gap: 16px;
+            }
+
+            label {
+                text-align: right;
+                grid-column: 1 / 2;
+            }
+
+            input,
+            button {
+                grid-column: 2 / 3;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Focus Button Setup</h1>
+    <p>
+        Done!
+    </p>
+</div>
+</body>
+</html>
