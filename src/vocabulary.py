@@ -2,7 +2,6 @@ import os
 import random
 import unicodedata
 import pandas as pd
-import text_utils as tu
 
 class Vocabulary:
 

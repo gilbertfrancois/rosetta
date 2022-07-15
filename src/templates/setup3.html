@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>BLiTzBLiT :: Focus Button Setup</title>
+	<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<div class="container">
+	<div class="row">
+	<div class="column_left">
+		<div class="title">Grammar Trainer</div>
+	</div>
+	<div class="column_right">
+    <p>
+        Welcome to the <strong>Focus Button</strong> setup screen. The Focus Button is your best tool to show
+        offline and online that you want to get stuff done without interruptions.
+        Get your Slack Access token at <a href="https://slackstatus.blitzblit.com">BLiTzBLiT</a>.
+    </p>
+	</div>
+	</div>
+	<div class="row">
+		<form class="form2" method="get" action="#">
+			{{ args.preposition }} 
+			{{ args.preposition }} 
+			<input type="text" id="article" name="field1">
+			{{ args.preposition }} 
+			{{ args.preposition }} 
+			{{ args.preposition }} 
+			{{ args.preposition }} 
+		</form>
+	</div>
+	<div class="row">
+		<div class="column_left">
+			&nbsp;	
+		</div>
+		<div class="column_right">
+			<form class="form1" method="get" action="setting">
+				<select id="ssid" name="ssid">
+					<option value="net1">net1</option>
+					<option value="net2">net2</option>
+					<option value="net3">net3</option>
+				</select>
+
+				<input type="password" id="password" name="password" placeholder="Wi-Fi password">
+
+				<input type="text" id="slack_token" name="slack_token" placeholder="Slack access token: xoxo-...">
+
+				<button type="submit" value="Submit">Save</button>
+			</form>
+		</div>
+	</div>
+	<div class="row">
+		<div class="column_left_nb">
+			&nbsp;	
+		</div>
+		<div class="column_right_nb">
+			<span class="footer">Copyright 2021, 2022, Gilbert Fran&ccedil;ois Duivesteijn</span>
+		</div>
+	</div>
+</div>
+
+</body>
+</html>
