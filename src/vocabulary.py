@@ -34,12 +34,14 @@ class Vocabulary:
 
     def load_new_vocabulary(self):
         self.df = pd.read_csv(self.vocabulary_path)
+        import pdb; pdb.set_trace()
         if self.normalize_unicode:
             for column in self.df.columns:
                 if len(column) == 2:
+                    self.df[column] = self.df[column].fillna("")
                     self.df[column] = self.df[column].apply(lambda x: unicodedata.normalize("NFC", x))
         # @TODO merge with old database to preserve scores.
-        # self.df = self.df[self.df["source_2"] == "2"]
+        self.df = self.df[self.df["source_2"] == "5"]
         self.save_database()
         self.get_source_sets()
         self.shuffle()
