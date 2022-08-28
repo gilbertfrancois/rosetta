@@ -34,7 +34,6 @@ class Vocabulary:
 
     def load_new_vocabulary(self):
         self.df = pd.read_csv(self.vocabulary_path)
-        import pdb; pdb.set_trace()
         if self.normalize_unicode:
             for column in self.df.columns:
                 if len(column) == 2:
