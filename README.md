@@ -15,10 +15,10 @@ functionalities:
 
 ## To do
 
--[ ] Make word list 'drop down' and selectable.
--[ ] Export entire wordset to mp3 app.
--[ ] Support for config file.
--[ ] Better TUI with Cursus
--[X] Sample rate for all file types to 22050.
--[X] Convert all sound files to mp3, 22050, 48k.
+- [ ] Make word list 'drop down' and selectable.
+- [ ] Export entire wordset to mp3 app.
+- [ ] Support for config file.
+- [ ] Better TUI with Cursus
+- [X] Sample rate for all file types to 22050.
+- [X] Convert all sound files to mp3, 22050, 48k.
 
