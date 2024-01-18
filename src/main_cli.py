@@ -15,22 +15,43 @@ MODE_INTERACTIVE = 2
 STATUS_OK = 0
 STATUS_EXIT = 1
 
+
 def parse_arguments(argv):
     parser = argparse.ArgumentParser()
-    parser.add_argument("-l", "--languages", type=str, required=True, help="Languages, comma seperated, e.g. EN,DE")
-    parser.add_argument("-m", "--mode", type=str, required=True, help="1: audit, 2: interactive")
-    parser.add_argument("-u", "--update-wordlist", type=bool, required=False, help="Reads the latest CSV.")
-    parser.add_argument("-r", "--repeat", type=bool, required=False, help="Endless repeat.")
+    parser.add_argument(
+        "-l",
+        "--languages",
+        type=str,
+        required=True,
+        help="Languages, comma seperated, e.g. EN,DE",
+    )
+    parser.add_argument(
+        "-m", "--mode", type=str, required=True, help="1: audit, 2: interactive"
+    )
+    parser.add_argument(
+        "-u",
+        "--update-wordlist",
+        type=bool,
+        required=False,
+        help="Reads the latest CSV.",
+    )
+    parser.add_argument(
+        "-r", "--repeat", type=bool, required=False, help="Endless repeat."
+    )
     return parser.parse_args(argv)
+
 
 def word_yellow(word, width=0):
     return Fore.YELLOW + word.ljust(width) + Style.RESET_ALL
 
+
 def word_red(word, width=0):
     return Fore.RED + word.ljust(width) + Style.RESET_ALL
 
+
 def word_green(word, width=0):
     return Fore.GREEN + word.ljust(width) + Style.RESET_ALL
+
 
 def word_diff(word1, word2):
     result = ""
@@ -44,6 +65,7 @@ def word_diff(word1, word2):
             result += Fore.RED + word1[i]
     result += Style.RESET_ALL
     return result
+
 
 def audit_word(vocabulary, language_list, voice, timeout, repeat):
     width = 120 // len(language_list)
@@ -70,7 +92,7 @@ def audit_word(vocabulary, language_list, voice, timeout, repeat):
     time.sleep(timeout + 1)
     return True
 
-        
+
 def interact_word(vocabulary, language_list, voice, repeat):
     row = vocabulary.sample()
     _language = language_list[0]
@@ -83,12 +105,16 @@ def interact_word(vocabulary, language_list, voice, repeat):
         _word = str(row[language_list[i]])
         is_correct = False
         while not is_correct:
-            vocabulary.increase_count(row.name, "req", language_list[0], language_list[i])
+            vocabulary.increase_count(
+                row.name, "req", language_list[0], language_list[i]
+            )
             try:
                 answer = input(f"[ {language_list[i]} ] ")
                 answer = unicodedata.normalize("NFC", answer)
             except UnicodeDecodeError:
-                print(f"[ {word_red('EE')} ] Sorry, the backspace caused an error. Please try again.")
+                print(
+                    f"[ {word_red('EE')} ] Sorry, the backspace caused an error. Please try again."
+                )
                 answer = ""
                 continue
             if answer == "quit":
@@ -101,28 +127,41 @@ def interact_word(vocabulary, language_list, voice, repeat):
                 is_correct = True
             else:
                 print(f"[ {word_red('XX')} ] {word_diff(_word, answer)}")
-                vocabulary.increase_count(row.name, "err", language_list[0], language_list[i])
+                vocabulary.increase_count(
+                    row.name, "err", language_list[0], language_list[i]
+                )
                 is_correct = False
             voice.say(_language, _word)
     return STATUS_OK
 
 
 def main(args):
-    print("--------------------------------------------------------------------------------")
-    print("- Rosetta                                                                      -")
-    print("- Gilbert Francois Duivesteijn                                                 -")
-    print("--------------------------------------------------------------------------------")
+    print(
+        "--------------------------------------------------------------------------------"
+    )
+    print(
+        "- Rosetta                                                                      -"
+    )
+    print(
+        "- Gilbert Francois Duivesteijn                                                 -"
+    )
+    print(
+        "--------------------------------------------------------------------------------"
+    )
     print()
 
     voice = None
     if OS == "macos":
         from voice_macos import VoiceMacOS
+
         voice = VoiceMacOS()
     elif OS == "polly":
         from voice_polly import VoicePolly
+
         voice = VoicePolly()
     else:
         from voice import Voice
+
         voice = Voice()
 
     mode = -1
@@ -138,7 +177,9 @@ def main(args):
     try:
         mode = int(args.mode)
     except:
-        raise RuntimeError(f"Mode option is invalid. Expected 1 or 2, actual {args.mode}.")
+        raise RuntimeError(
+            f"Mode option is invalid. Expected 1 or 2, actual {args.mode}."
+        )
     if mode == -1:
         raise RuntimeError(f"Invalid mode.")
     if args.update_wordlist:
@@ -149,6 +190,7 @@ def main(args):
 
     # Load database
     vocabulary = Vocabulary("../data", update=update)
+    vocabulary = Vocabulary("../data", update=True)
     vocabulary.set_language_list(language_list)
     vocabulary.get_source_sets()
 
@@ -161,7 +203,9 @@ def main(args):
     elif mode == MODE_AUDIT:
         running = True
         while running:
-            status = audit_word(vocabulary, language_list, voice, timeout=2, repeat=repeat)
+            status = audit_word(
+                vocabulary, language_list, voice, timeout=2, repeat=repeat
+            )
             vocabulary.save_database()
             if not status:
                 running = False
