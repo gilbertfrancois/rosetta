@@ -33,7 +33,7 @@ def read_scan(filepath: str) -> list[str]:
         word = line.strip()
         if len(word) == 0:
             continue
-        new_words.append[word]
+        new_words.append(word)
     return new_words
 
 
@@ -52,6 +52,47 @@ def jaccard_similarity(word1, word2):
             intersection = intersection + 1
     ji = intersection / union
     return ji
+
+
+def match_word_for_scan(scan_word: str, src_lng: str, corpus: pd.DataFrame) -> str:
+    corpus_t = corpus.copy()
+    word = scan_word.strip()
+    if len(word) == 0:
+        return ""
+    corpus_t["dist"] = corpus_t[f"{src_lng}_search"].apply(
+        lambda word1: jellyfish.jaro_similarity(word1, word)
+    )
+    corpus_sorted = corpus_t.sort_values(by=["dist"], ascending=False).copy()
+    corpus_sorted = corpus_sorted[[f"{src_lng}_insert", "dist"]]
+    corpus_sorted = corpus_sorted[corpus_sorted["dist"] > 0.5]
+    corpus_sorted = corpus_sorted[f"{src_lng}_insert"].unique()
+    corpus_sorted = pd.DataFrame(corpus_sorted, columns=[f"{src_lng}_insert"])
+    corpus_sorted["dist"] = corpus_sorted[f"{src_lng}_insert"].apply(
+        lambda word1: jellyfish.jaro_similarity(word1, word)
+    )
+    corpus_sorted = corpus_sorted.reset_index(drop=True)
+    corpus_sorted.index += 1
+    corpus_sorted = corpus_sorted.loc[1:5]
+    corpus_sorted.loc[0] = [word, 0]
+    corpus_sorted = corpus_sorted.sort_index()
+    print(corpus_sorted)
+    print(f"Choose a number or [i] for manual input:")
+    val = input(PROMPT_INSERT)
+    dst_word = ""
+    if val.isnumeric():
+        val = int(val)
+        row_src = corpus_sorted.loc[val]
+        dst_word = row_src[f"{src_lng}_insert"]
+    elif val == "i":
+        print(f"Input word:")
+        dst_word = input(PROMPT_INSERT)
+    elif val == "s":
+        dst_word = "SKIP"
+    elif val == "d":
+        dst_word = "DEL"
+    elif val == ".":
+        dst_word = "."
+    return dst_word
 
 
 def match_word_for_lngs(
@@ -202,6 +243,7 @@ def mainloop(corpora: dict[str, pd.DataFrame], dst_std_columns: dict[str, str]) 
     dst_lngs = ["DE", "EN"]
     df_words = pd.DataFrame(columns=COLUMNS)
     continuous_mode = False
+    last_command = ""
     scan_line_index = 0
     scanned_words = []
     skipped_scanned_words = []
@@ -214,15 +256,15 @@ def mainloop(corpora: dict[str, pd.DataFrame], dst_std_columns: dict[str, str]) 
             except UnicodeDecodeError:
                 print("Illegal character.")
         else:
-            cmd = "i"
+            cmd = last_command
         if cmd == "h":
             print(f"--- Help commands")
-            print(f"ls [filename]  Load scan [filename]")
+            print(f"rs [filename]  Load scan [filename]")
             print(f"as             Prefill source language words from scan")
             print(f"h              Help")
             print(f"i              Insert row")
             print(f"s              Set source language")
-            print(f"l [nr]         List line(s)")
+            print(f"p [nr]         Print line(s)")
             print(f"w              Write word list")
             print(f"c              Set continuous mode, enter . to exit")
             print(f"q              Quit")
@@ -232,11 +274,34 @@ def mainloop(corpora: dict[str, pd.DataFrame], dst_std_columns: dict[str, str]) 
             if len(tokens) > 1:
                 scanned_words = read_scan(tokens[1])
                 scan_line_index = 0
-
         elif len(cmd) > 1 and cmd[:2] == "as":
-            if len(scanned_words) <= scan_line_index:
+            last_command = cmd
+            if src_lng == "":
+                print("Error: Source language is not set.")
+                last_command = ""
+                continue
+            if scan_line_index < len(scanned_words):
                 scan_word = scanned_words[scan_line_index]
-
+                src_word = match_word_for_scan(scan_word, src_lng, corpora["RU_DE"])
+                scan_line_index += 1
+                if src_word == ".":
+                    continuous_mode = False
+                    last_command = ""
+                    continue
+                if src_word == "SKIP":
+                    skipped_scanned_words.append(scan_word)
+                    continue
+                row = match_word_for_lngs(src_word, src_lng, dst_lngs, corpora)
+                if row is not None:
+                    row = {**dst_std_columns, **row}
+                    df_words = pd.concat(
+                        [df_words, pd.DataFrame([row])], ignore_index=True
+                    )
+                    print(df_words.iloc[-1])
+                else:
+                    print("Cancelled.")
+            else:
+                print("Index out of range.")
         elif cmd == "c":
             continuous_mode = True
         elif cmd == "s":
@@ -246,12 +311,14 @@ def mainloop(corpora: dict[str, pd.DataFrame], dst_std_columns: dict[str, str]) 
             else:
                 print(f"Source language = {src_lng}")
         elif cmd == "i":
+            last_command = cmd
             if src_lng not in SUPPORTED_SRC_LNGS:
                 print("Error: Source language is not set.")
             else:
                 src_word = input(PROMPT_INSERT)
                 if src_word == ".":
                     continuous_mode = False
+                    last_command = ""
                     continue
                 row = match_word_for_lngs(src_word, src_lng, dst_lngs, corpora)
                 if row is not None:
