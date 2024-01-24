@@ -13,7 +13,7 @@ profile = "black"
 # A comma-separated list of package or module names from where C extensions may
 # be loaded. Extensions are loading into the active Python interpreter and may
 # run arbitrary code.
-extension-pkg-allow-list = ["cv2", "jellyfish"]
+extension-pkg-allow-list = ["cv", "cv2", "jellyfish"]
 
 # Minimum Python version to use for version dependent checks. Will default to the
 # version used to run pylint.
@@ -62,6 +62,8 @@ jellyfish = "^1.0.3"
 ipython = "^8.20.0"
 pylint = "^3.0.3"
 black = "^23.12.1"
+mypy = "^1.8.0"
+pdbpp = "^0.10.3"
 
 [build-system]
 requires = ["poetry-core"]

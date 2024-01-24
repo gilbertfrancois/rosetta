@@ -45,3 +45,5 @@ class Context:
     src_lng = "RU"
     dst_lngs = ["DE", "EN"]
     rosetta = pd.DataFrame()
+    corpora: Optional[dict[str, pd.DataFrame]] = None
+    prefix_columns: dict[str, str] = field(default_factory=dict)
