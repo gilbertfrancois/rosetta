@@ -1,11 +1,12 @@
-import unicodedata
 import argparse
-import time
-from colorama import Fore, Style
 import os
 import sys
-from vocabulary import Vocabulary
+import time
+import unicodedata
 
+from colorama import Fore, Style
+
+from vocabulary import Vocabulary
 
 OS = "macos"
 
@@ -87,13 +88,13 @@ def audit_word(vocabulary, language_list, voice, timeout, repeat):
         sys.stdout.flush()
         voice.say(_language, _word)
         vocabulary.increase_count(row.name, "audit", language_list[0], language_list[i])
-    print(f"\n", end="")
+    print("\n", end="")
     sys.stdout.flush()
     time.sleep(timeout + 1)
     return True
 
 
-def interact_word(vocabulary, language_list, voice, repeat):
+def interact_word(vocabulary, language_list, voice):
     row = vocabulary.sample()
     _language = language_list[0]
     _word = str(row[language_list[0]])
@@ -119,8 +120,8 @@ def interact_word(vocabulary, language_list, voice, repeat):
                 continue
             if answer == "quit":
                 return STATUS_EXIT
-            elif answer == "s":
-                print(f"[ >> ] skipped")
+            if answer == "s":
+                print("[ >> ] skipped")
                 is_correct = True
             elif answer == _word:
                 print(f"[ {word_green('Ok')} ] {word_diff(_word, answer)}")
@@ -133,6 +134,24 @@ def interact_word(vocabulary, language_list, voice, repeat):
                 is_correct = False
             voice.say(_language, _word)
     return STATUS_OK
+
+
+def init_voice():
+    voice = None
+    if OS == "macos":
+        from voice_macos import VoiceMacOS
+
+        voice = VoiceMacOS()
+    elif OS == "polly":
+        from voice_polly import VoicePolly
+
+        voice = VoicePolly()
+    else:
+        from voice import Voice
+
+        voice = Voice()
+
+    return voice
 
 
 def main(args):
@@ -150,56 +169,44 @@ def main(args):
     )
     print()
 
-    voice = None
-    if OS == "macos":
-        from voice_macos import VoiceMacOS
-
-        voice = VoiceMacOS()
-    elif OS == "polly":
-        from voice_polly import VoicePolly
-
-        voice = VoicePolly()
-    else:
-        from voice import Voice
-
-        voice = Voice()
-
-    mode = -1
+    # Init voice based on OS
+    voice = init_voice()
+    # Toggle repeat from command line arguments
     update = False
     repeat = args.repeat
     if repeat is None:
         repeat = False
     print(f"Repeat: {repeat}.")
-
+    # Get the requested languages from command line arguments
     language_list = args.languages.split(",")
     if len(language_list) < 2:
-        raise RuntimeError(f"Invalid language list.")
-    try:
-        mode = int(args.mode)
-    except:
+        raise RuntimeError("Invalid language list.")
+    # Set Audit or Interactive mode from command line arguments
+    mode = args.mode
+    if mode.isnumeric:
+        mode = int(mode)
+    else:
         raise RuntimeError(
             f"Mode option is invalid. Expected 1 or 2, actual {args.mode}."
         )
-    if mode == -1:
-        raise RuntimeError(f"Invalid mode.")
+    if mode < 1 or mode > 2:
+        raise RuntimeError("Invalid mode.")
+    # Recreate wordlist from the csv if requested from the command line arguments
     if args.update_wordlist:
         update = True
     # Prepare cache folders for voice files.
     for lng in language_list:
         os.makedirs(f"../data/voice/{lng}", exist_ok=True)
-
     # Load database
     vocabulary = Vocabulary("../data", update=update)
     vocabulary = Vocabulary("../data", update=True)
     vocabulary.set_language_list(language_list)
     vocabulary.get_source_sets()
-
     if mode == MODE_INTERACTIVE:
         running = True
         while running:
-            status = interact_word(vocabulary, language_list, voice, repeat=repeat)
+            status = interact_word(vocabulary, language_list, voice)
             vocabulary.save_database()
-
     elif mode == MODE_AUDIT:
         running = True
         while running:
@@ -209,10 +216,9 @@ def main(args):
             vocabulary.save_database()
             if not status:
                 running = False
-
     print("[ .. ] Bye!")
 
 
 if __name__ == "__main__":
-    args = parse_arguments(sys.argv[1:])
-    main(args)
+    args_ = parse_arguments(sys.argv[1:])
+    main(args_)
